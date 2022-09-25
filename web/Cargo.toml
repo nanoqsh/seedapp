@@ -1,0 +1,18 @@
+[package]
+name = "web"
+version = "0.1.0"
+edition = "2021"
+
+[lib]
+crate-type = ["cdylib"]
+
+[dependencies]
+seed = "0.9"
+
+[profile.release]
+lto = true
+opt-level = 's'
+codegen-units = 1
+
+[package.metadata.wasm-pack.profile.release]
+wasm-opt = ['-Os']

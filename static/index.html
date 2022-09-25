@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="modulepreload" href="/pkg/web.js" as="script" type="text/javascript">
+    <link rel="preload" href="/pkg/web_bg.wasm" as="fetch" type="application/wasm" crossorigin="anonymous">
+    <title>Hello, Seed!</title>
+</head>
+
+<body>
+    <section id="root"></section>
+    <script type="module">
+        import init from '/pkg/web.js';
+        init('/pkg/web_bg.wasm');
+    </script>
+</body>
+
+</html>
