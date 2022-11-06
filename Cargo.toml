@@ -4,7 +4,14 @@ version = "0.1.0"
 edition = "2021"
 
 [dependencies]
-axum = "0.5"
+axum = { version = "0.6.0-rc.2", default-features = false, features = ["http1"] }
 tokio = { version = "1.20", features = ["rt-multi-thread"] }
 tower = "0.4"
 tower-http = { version = "0.3", features = ["fs"] }
+
+[profile.dev]
+split-debuginfo = "unpacked"
+
+[profile.release]
+strip = true
+lto = true

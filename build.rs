@@ -16,7 +16,7 @@ fn main() {
             "../static/pkg/",
             "--no-typescript",
         ])
-        .args(debug.then(|| "--dev"))
+        .args(debug.then_some("--dev"))
         .arg("web/")
         .output()
         .expect("build wasm");

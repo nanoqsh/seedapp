@@ -6,24 +6,25 @@ use {
         Router, Server,
     },
     std::{io, net::SocketAddr},
-    tokio::runtime::Builder,
-    tower::service_fn,
-    tower_http::services::ServeDir,
 };
 
 fn main() {
+    use tokio::runtime::Builder;
+
     Builder::new_multi_thread()
         .enable_all()
         .build()
         .expect("build tokio runtime")
-        .block_on(serve())
+        .block_on(serve());
 }
 
 async fn serve() {
+    use {tower::service_fn, tower_http::services::ServeDir};
+
     let service = ServeDir::new("static").not_found_service(service_fn(handle_not_found));
 
     let app =
-        Router::new().fallback(get_service(service).handle_error(|_| async {
+        Router::new().fallback_service(get_service(service).handle_error(|_| async {
             (StatusCode::INTERNAL_SERVER_ERROR, "Something went wrong..")
         }));
 
