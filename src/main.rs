@@ -23,10 +23,13 @@ fn main() {
 fn init_tracing() {
     use tracing_subscriber::{fmt, layer::SubscriberExt, util::SubscriberInitExt, EnvFilter};
 
+    const APP_NAME: &str = env!("CARGO_PKG_NAME");
+
     tracing_subscriber::registry()
         .with(
-            EnvFilter::try_from_default_env()
-                .unwrap_or_else(|_| "seedapp=debug,tokio=debug,tower_http=debug".into()),
+            EnvFilter::try_from_default_env().unwrap_or_else(|_| {
+                format!("{APP_NAME}=debug,tokio=debug,tower_http=debug").into()
+            }),
         )
         .with(fmt::layer())
         .init();
