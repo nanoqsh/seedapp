@@ -11,11 +11,25 @@ use {
 fn main() {
     use tokio::runtime::Builder;
 
+    init_tracing();
+
     Builder::new_multi_thread()
         .enable_all()
         .build()
         .expect("build tokio runtime")
         .block_on(serve());
+}
+
+fn init_tracing() {
+    use tracing_subscriber::{fmt, layer::SubscriberExt, util::SubscriberInitExt, EnvFilter};
+
+    tracing_subscriber::registry()
+        .with(
+            EnvFilter::try_from_default_env()
+                .unwrap_or_else(|_| "seedapp=debug,tokio=debug,tower_http=debug".into()),
+        )
+        .with(fmt::layer())
+        .init();
 }
 
 async fn serve() {
@@ -28,8 +42,8 @@ async fn serve() {
             (StatusCode::INTERNAL_SERVER_ERROR, "Something went wrong..")
         }));
 
-    let addr = SocketAddr::from(([0; 4], 3000));
-    println!("serve at http://{addr}");
+    let addr = SocketAddr::from(([127, 0, 0, 1], 3000));
+    tracing::debug!("serve at http://{addr}");
     Server::bind(&addr)
         .serve(app.into_make_service())
         .await

@@ -8,6 +8,8 @@ axum = { version = "0.6", default-features = false, features = ["http1", "tokio"
 tokio = { version = "1.24", features = ["rt-multi-thread"] }
 tower = "0.4"
 tower-http = { version = "0.3", features = ["fs"] }
+tracing = "0.1"
+tracing-subscriber = { version = "0.3", features = ["env-filter"] }
 
 [profile.dev]
 split-debuginfo = "unpacked"
