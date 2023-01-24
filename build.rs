@@ -1,4 +1,7 @@
-use std::{env, process::Command};
+use std::{
+    env,
+    process::{Command, ExitStatus},
+};
 
 fn main() {
     println!("cargo:rerun-if-changed=web/");
@@ -21,8 +24,26 @@ fn main() {
         .output()
         .expect("build wasm");
 
-    if !output.status.success() {
+    if !output.status.success() || core_dumped(output.status) {
+        let out = String::from_utf8_lossy(&output.stdout);
         let err = String::from_utf8_lossy(&output.stderr);
-        panic!("error while compiling wasm:\n{err}");
+        panic!("error while compiling wasm:\nout:{out}\nerr:{err}\n");
     }
+}
+
+fn core_dumped(status: ExitStatus) -> bool {
+    let dumped;
+
+    #[cfg(target_family = "unix")]
+    {
+        use std::os::unix::process::ExitStatusExt;
+        dumped = status.core_dumped();
+    }
+
+    #[cfg(not(target_family = "unix"))]
+    {
+        dumped = false;
+    }
+
+    dumped
 }
